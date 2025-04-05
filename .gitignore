@@ -9,3 +9,4 @@ weights/*
 pretrained
 data/Kitti/downsampled
 data/ModelNet/*.pkl
+data/ModelNet/modelnet40_ply_hdf5_2048/

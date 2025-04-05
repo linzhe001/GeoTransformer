@@ -1,25 +1,34 @@
 import h5py
 import numpy as np
 import pickle
+import os
 
+# 定义当前目录的绝对路径
+CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 def dump_pickle(data, filename):
-    with open(filename, 'wb') as f:
+    with open(os.path.join(CURRENT_DIR, filename), 'wb') as f:
         pickle.dump(data, f)
 
 
 def process(subset):
-    with open(f'modelnet40_ply_hdf5_2048/{subset}_files.txt') as f:
+    with open(os.path.join(CURRENT_DIR, f'modelnet40_ply_hdf5_2048/{subset}_files.txt')) as f:
         lines = f.readlines()
     all_points = []
     all_normals = []
     all_labels = []
     for line in lines:
         filename = line.strip()
-        h5file = h5py.File(f'modelnet40_ply_hdf5_2048/{filename}', 'r')
+        # 移除文件名中的"data/modelnet40_ply_hdf5_2048/"前缀，避免路径重复
+        if filename.startswith('data/modelnet40_ply_hdf5_2048/'):
+            actual_filename = filename.replace('data/modelnet40_ply_hdf5_2048/', '')
+        else:
+            actual_filename = filename
+        
+        h5file = h5py.File(os.path.join(CURRENT_DIR, 'modelnet40_ply_hdf5_2048', actual_filename), 'r')
         all_points.append(h5file['data'][:])
         all_normals.append(h5file['normal'][:])
-        all_labels.append(h5file['label'][:].flatten().astype(np.int))
+        all_labels.append(h5file['label'][:].flatten().astype(np.int64))
     points = np.concatenate(all_points, axis=0)
     normals = np.concatenate(all_normals, axis=0)
     labels = np.concatenate(all_labels, axis=0)

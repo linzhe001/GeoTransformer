@@ -37,7 +37,7 @@ conda activate geotransformer
 pip install torch==1.7.1+cu110 -f https://download.pytorch.org/whl/torch_stable.html
 
 # Install packages and other dependencies
-pip install -r requirements.txt
+SKLEARN_ALLOW_DEPRECATED_SKLEARN_PACKAGE_INSTALL=True pip install -r requirements.txt
 python setup.py build develop
 ```
 
